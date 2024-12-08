@@ -3,9 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Import pages
 import HomePage from '@/pages/HomePage.vue';
-import WatchPage from '@/pages/WatchPage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
-import AnimeDetailsPage from '@/pages/AnimeDetailsPage.vue';
 
 const routes = [
   {
@@ -21,15 +19,15 @@ const routes = [
   {
     path: '/watch/:id',
     name: 'Watch',
-    component: WatchPage, // Watch anime page
-    props: true, // Pass route params as props
+    component: () => import('@/pages/WatchPage.vue'),
+    props: true, // Pass route parameters as props
   },
   {
     path: '/info/:id',
-    name: 'AnimeDetails',
-    component: AnimeDetailsPage,
-    props: true, // Pass `id` as a prop to the component
-},
+    name: 'Info',
+    component: () => import('@/pages/AnimeDetailsPage.vue'), // Ensure this path is correct
+    props: true,
+  },
 
   {
     path: '/:catchAll(.*)', // Handle unmatched routes
@@ -39,7 +37,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(), 
+  history: createWebHistory(),
   routes,
 });
 

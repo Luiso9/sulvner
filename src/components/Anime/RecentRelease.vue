@@ -10,32 +10,30 @@
 			<div class="anime-card" v-for="anime in animeList" :key="anime.id">
 				<img :src="anime.image" :alt="anime.title" class="anime-image" />
 				<h3 class="anime-title">{{ anime.title }}</h3>
-				<p class="anime-description">{{ anime.episodeNumber }}...</p>
-				<button
-					@click="viewAnimeDetails(anime.id)"
-					class="anime-details-button"
-				>
-					View Details</button
-				><button
-					@click="watchAnime(anime.episodeId)"
-					class="anime-watch-button"
-				>
+				<p class="anime-description">
+					Type: {{ anime.type }} - Duration: {{ anime.duration }}
+				</p>
+				<p v-if="anime.episodes > 0">
+					Episodes: {{ anime.episodes }} (Sub: {{ anime.sub }}, Dub:
+					{{ anime.dub }})
+				</p>
+				<p v-else>No episodes yet</p>
+				<button @click="viewAnimeDetails(anime.id)" class="anime-details-button">
+					View Details
+				</button>
+				<button @click="watchAnime(anime.id)" class="anime-watch-button">
 					Watch
 				</button>
-				<AnimeDetailsPage v-if="showDetails" :animeId="selectedId" />
 			</div>
 		</div>
 
 		<div v-if="animeList.length > 0" class="pagination">
-			<button
-				@click="changePage(currentPage - 1)"
-				:disabled="currentPage === 1"
-				class="pagination-button"
-			>
+			<button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="pagination-button">
 				Previous
 			</button>
-			<span>Page {{ currentPage }}</span>
-			<button @click="changePage(currentPage + 1)" class="pagination-button">
+			<span>Page {{ currentPage }} of {{ totalPages }}</span>
+			<button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages"
+				class="pagination-button">
 				Next
 			</button>
 		</div>
@@ -44,7 +42,6 @@
 
 <script>
 import { fetchRecentAnime } from "@/services/animeServices";
-import AnimeDetailsPage from "@/pages/AnimeDetailsPage.vue";
 
 export default {
 	name: "RecentRelease",
@@ -52,67 +49,46 @@ export default {
 		return {
 			animeList: [],
 			currentPage: 1,
+			totalPages: 0,
 			showDetails: false,
 			selectedId: null,
 		};
 	},
 	async created() {
-		try {
-			const data = await fetchRecentAnime(this.currentPage);
-			this.animeList = data.results;
-		} catch (error) {
-			console.error("Error loading homepage:", error);
-		}
+		await this.loadAnimeList();
 	},
 	methods: {
-		async changePage(page) {
-			if (page < 1) return;
-			this.currentPage = page;
+		async loadAnimeList() {
 			try {
 				const data = await fetchRecentAnime(this.currentPage);
 				this.animeList = data.results;
+				this.totalPages = data.totalPages || 1;
 			} catch (error) {
-				console.error("Error changing page:", error);
+				console.error("Error loading anime list:", error);
 			}
 		},
+		async changePage(page) {
+			if (page < 1 || page > this.totalPages) return;
+			this.currentPage = page;
+			await this.loadAnimeList();
+		},
 		viewAnimeDetails(id) {
-			// console.log("Navigating to ID:", id); // Debug
 			this.$router.push({ name: "Info", params: { id } });
 		},
 		watchAnime(episodeId) {
 			this.$router.push({ name: "Watch", params: { id: episodeId } });
 		},
 	},
-	components: {
-		AnimeDetailsPage,
-	},
 };
 </script>
 
-<style scoped>
-.home-page {
-	padding: 20px;
+<style>
+.anime-description {
+	font-size: 0.9rem;
+	margin: 5px 0;
 }
 
-.anime-list {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	gap: 20px;
-}
-
-.pagination {
-	margin-top: 20px;
-	display: flex;
-	justify-content: center;
-}
-
-button {
-	padding: 10px 15px;
-	margin: 0 10px;
-	cursor: pointer;
-}
-
-button:disabled {
-	cursor: not-allowed;
+.anime-card p {
+	margin: 5px 0;
 }
 </style>

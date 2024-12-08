@@ -1,37 +1,47 @@
 <template>
-	<input type="text" v-model="query" />
-	<button @click.prevent="submitQuery">Search</button>
+	<div>
+		<input
+			type="text"
+			v-model="query"
+			class="search-input"
+			placeholder="Type to search..."
+		/>
+		<button @click.prevent="submitQuery" class="search-button">Search</button>
+	</div>
 </template>
 
-<!-- TODO : implement dynamic search without button click? -->
-
 <script>
+import { useSearchStore } from "@/store/searchStores";
+
 export default {
 	name: "SearchBar",
-	data() {
-		return {
-			query: "",
-			searchResults: [],
-			currentPage: 1,
-		};
+	computed: {
+		query: {
+			get() {
+				return this.searchStore.query;
+			},
+			set(value) {
+				this.searchStore.setQuery(value); // Update the Pinia store
+			},
+		},
 	},
 	methods: {
 		submitQuery() {
 			if (this.query.trim()) {
-				this.$emit("perform-search", this.query); 
+				console.log("Query submitted:", this.query);
 			} else {
-				console.log("Query empty");
+				console.log("Query is empty.");
 			}
 		},
 	},
-	emits: {
-		"perform-search": (query) => typeof query === "string",
+	setup() {
+		const searchStore = useSearchStore();
+		return { searchStore };
 	},
 };
 </script>
 
 <style>
-/* Optional styling */
 .search-input {
 	width: 80%;
 	padding: 0.5rem;

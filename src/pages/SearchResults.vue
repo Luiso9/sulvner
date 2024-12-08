@@ -4,45 +4,68 @@
 			<p>No results found. Sorry.</p>
 		</div>
 		<div v-else class="results-grid">
-			<div v-for="anime in results" :key="anime.id" class="results-card">
-				<img :src="anime.image" :alt="anime.title" class="anime.image">
-				<h3 class="anime-title">{{  anime.title }}</h3>
-				<p class="anime-description"> Episode {{ anime.episodeNumber }}</p>
-				<button @click.prevent="$emit('view-details', anime.id)" class="details-button">View Details</button>
+			<div v-for="anime in results" :key="anime.id" class="result-card">
+				<img :src="anime.image" :alt="anime.title" class="anime-image" />
+				<h3 class="anime-title">{{ anime.title }}</h3>
+				<p class="anime-description">Episode {{ anime.episodeNumber || 'N/A' }}</p>
+				<button @click.prevent="viewDetails(anime.id)" class="details-button">
+					View Details
+				</button>
 			</div>
 		</div>
 
 		<!-- Pagination -->
 		<div v-if="results.length > 0" class="pagination">
 			<button
-				@click="$emit('change-page', currentPage - 1)"
+				@click="changePage(currentPage - 1)"
 				:disabled="currentPage === 1"
 				class="pagination-button"
 			>
 				Previous
 			</button>
 			<span>Page {{ currentPage }}</span>
-			<button @click="$emit('change-page', currentPage + 1)" class="pagination-button">
+			<button @click="changePage(currentPage + 1)" class="pagination-button">
 				Next
 			</button>
+			<RouterLink to="/">Go to Home</RouterLink>
 		</div>
 	</div>
 </template>
 
 <script>
-	export default {
-		name: "SearchResults",
-		props: {
-			results: {
-                type: Array,
-                required: true
-            },
-            currentPage: {
-                type: Number,
-                default: 1,
-            }
-        },
-	};
+import { useSearchStore } from "@/store/searchStores";
+import { useRouter } from "vue-router";
+
+export default {
+	name: "SearchResults",
+	props: {
+		results: {
+			type: Array,
+			required: true,
+		},
+		currentPage: {
+			type: Number,
+			default: 1,
+		},
+	},
+	setup() {
+		const searchStore = useSearchStore(); // Access Pinia store
+		const router = useRouter();
+
+		// Navigation to anime details page
+		const viewDetails = (id) => {
+			router.push({ name: "Info", params: { id } });
+		};
+
+		// Change pagination page
+		const changePage = (newPage) => {
+			searchStore.setCurrentPage(newPage); 
+			searchStore.fetchResults(); 
+		};
+
+		return { viewDetails, changePage };
+	},
+};
 </script>
 
 <style>

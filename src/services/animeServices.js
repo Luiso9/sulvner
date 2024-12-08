@@ -3,29 +3,55 @@ import api from './api';
 /**
  * Fetch a list of recently added anime.
  * @param {number} page - Page number.
- * @param {number} type - Anime type (e.g., 1 for episodes).
  * @returns {Promise<Object>} - Anime data.
  */
-export const fetchRecentAnime = async (page = 1, type = 1) => {
+export const fetchRecentAnime = async (page = 1) => {
   try {
-    const response = await api.get('/gogoanime/recent-episodes', {
-      params: { page, type },
+    const response = await api.get('/zoro/recent-episodes', {
+      params: { page },
     });
-    return response.data;
+    return {
+      results: response.data.results || [],
+      currentPage: response.data.currentPage,
+      totalPages: response.data.totalPages,
+    };
   } catch (error) {
     console.error('Error fetching recent anime:', error);
     throw error;
   }
 };
 
+
+/**
+ * Fetch a list of top-airing anime.
+ * @param {number} page - Page number.
+ * @returns {Promise<Object>} - Anime data.
+ */
 export const getTopAnime = async (page = 1) => {
   try {
-    const response = await api.get('/gogoanime/top-airing', {
+    const response = await api.get('/zoro/top-airing', {
       params: { page },
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching recent anime:', error);
+    console.error('Error fetching top-airing anime:', error);
+    throw error;
+  }
+};
+
+/**
+ * Fetch a list of the most popular anime.
+ * @param {number} page - Page number.
+ * @returns {Promise<Object>} - Anime data.
+ */
+export const getMostPopularAnime = async (page = 1) => {
+  try {
+    const response = await api.get('/zoro/most-popular', {
+      params: { page },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching most popular anime:', error);
     throw error;
   }
 };
@@ -38,10 +64,9 @@ export const getTopAnime = async (page = 1) => {
  */
 export const searchAnime = async (query, page = 1) => {
   try {
-    const response = await api.get(`/gogoanime/${query}?page=${page}`, {
-      params: { query, page },
+    const response = await api.get(`/zoro/${query}`, {
+      params: { page },
     });
-
     return response.data;
   } catch (error) {
     console.error('Error searching anime:', error);
@@ -56,10 +81,11 @@ export const searchAnime = async (query, page = 1) => {
  */
 export const fetchAnimeDetails = async (id) => {
   try {
-    const response = await api.get(`/gogoanime/info/${id}`);
-    // console.log('API Response:', response.data);
-    // Debug.assert
-    return response.data;
+    // Construct the URL with the correct API path and query parameters
+    const response = await api.get('/zoro/info', {
+      params: { id },
+    });
+    return response.data; // Return the anime details
   } catch (error) {
     console.error('Error fetching anime details:', error);
     throw error;
@@ -68,25 +94,45 @@ export const fetchAnimeDetails = async (id) => {
 
 /**
  * Fetch the streaming link for a specific episode and server.
- *
- * @param {string} episodeId - The ID of the episode.
- * @param {string} serverName - The server to fetch the link from (e.g., "gogocdn", "streamsb", "vidstreaming"). default == gogocdn
+ * @param {string} episodeId - The ID of the episode (e.g., 'spy-x-family-17977$episode$89506$both').
+ * @param {string} [serverName="gogocdn"] - The server to fetch the link from (e.g., "gogocdn", "vidcloud").
  * @returns {Promise<Object>} - The streaming link data.
- * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchStreamingLink = async (episodeId, serverName = "gogocdn") => {
-  const validServers = ["gogocdn", "streamsb", "vidstreaming"];
-  if (!validServers.includes(serverName)) {
-    throw new Error(`Invalid server: ${serverName}. Valid servers are ${validServers.join(", ")}.`);
-  }
-
   try {
-    const response = await api.get(`/gogoanime/watch/${episodeId}`,{
+    const response = await api.get('/zoro/watch', {
+      params: { episodeId, server: serverName },
     });
-    
-    return response.data;
+    return response.data; // The response contains streaming sources and other details
   } catch (error) {
-    console.error("Error fetching streaming link:", error);
-    throw error;
+    console.error('Error fetching streaming link:', error);
+    throw new Error('Failed to fetch streaming link.');
   }
+};
+
+/**
+ * Fetch detailed anime information from the `/info` endpoint.
+ * @param {string} id - The anime ID (e.g., "jujutsu-kaisen-2nd-season-18413").
+ * @returns {Promise<Object>} - Anime details including episodes.
+ */
+export const fetchAnimeDetailsWithEpisodes = async (id) => {
+  try {
+    const response = await api.get(`/zoro/info`, {
+      params: { id },
+    });
+    return response.data; // Contains detailed anime info, including episodes
+  } catch (error) {
+    console.error('Error fetching detailed anime information:', error);
+    throw new Error('Failed to fetch detailed anime information.');
+  }
+};
+
+/**
+ * Find an episode by its number from the anime details.
+ * @param {Object[]} episodes - The list of episodes from the anime info.
+ * @param {number} number - The episode number to find.
+ * @returns {Object|null} - The matched episode object, or null if not found.
+ */
+export const findEpisodeByNumber = (episodes, number) => {
+  return episodes.find((episode) => episode.number === number) || null;
 };
