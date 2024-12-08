@@ -13,6 +13,8 @@
 	</div>
 </template>
 
+<!-- TODO : -  -->
+
 <script>
 import { fetchAnimeDetails } from "@/services/animeServices";
 
@@ -38,14 +40,5 @@ export default {
 			}
 		},
 	},
-	// watch: {
-	// 	// Watch for changes in `id` when navigating to the same component with a different `id`
-	// 	id: {
-	// 		immediate: true,
-	// 		async handler(newId) {
-	// 			await this.loadAnimeDetails();
-	// 		},
-	// 	},
-	// },
 };
 </script>

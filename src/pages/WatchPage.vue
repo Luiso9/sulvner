@@ -19,6 +19,9 @@
 	</div>
 </template>
 
+<!-- TODO : Video implementation, its still cant play video -->
+<!-- TODO : CORS Thing. -->
+
 <script>
 import { fetchStreamingLink } from "@/services/animeServices";
 import Hls from "hls.js";
@@ -38,7 +41,9 @@ export default {
 		try {
 			const data = await fetchStreamingLink(this.id); // Fetch link with default server
 			if (data.sources && data.sources.length > 3) {
-				this.streamingLink = 'https://gogoanime-and-hianime-proxy.vercel.app/hls-proxy?url=' + data.sources[3].url;
+				this.streamingLink =
+					"https://gogoanime-and-hianime-proxy.vercel.app/hls-proxy?url=" +
+					data.sources[3].url;
 			} else {
 				throw new Error("No valid streaming link available.");
 			}
@@ -62,7 +67,9 @@ export default {
 					hls.on(Hls.Events.MANIFEST_PARSED, () => {
 						videoElement.play();
 					});
-				} else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+				} else if (
+					videoElement.canPlayType("application/vnd.apple.mpegurl")
+				) {
 					// Fallback for Safari and other HLS supported browsers
 					videoElement.src = newLink;
 					videoElement.play();

@@ -3,6 +3,8 @@
 	<button @click.prevent="submitQuery">Search</button>
 </template>
 
+<!-- TODO : implement dynamic search without button click? -->
+
 <script>
 export default {
 	name: "SearchBar",
@@ -16,7 +18,7 @@ export default {
 	methods: {
 		submitQuery() {
 			if (this.query.trim()) {
-				this.$emit("perform-search", this.query); // TODO : implement dynamic search without entering the button
+				this.$emit("perform-search", this.query); 
 			} else {
 				console.log("Query empty");
 			}
