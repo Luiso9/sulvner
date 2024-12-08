@@ -1,0 +1,47 @@
+src/
+├── assets/                     # Static assets like images, icons, and global styles.
+│   ├── images/                 # Store any image files used in the project.
+│   ├── styles/                 # Global SCSS/CSS files.
+│       └── main.css            # Entry point for global styles.
+│
+├── components/                 # Reusable Vue components.
+│   ├── Layout/                 # Components related to the app's layout.
+│       └── Header.vue          # App header.
+│       └── Footer.vue          # App footer.
+│   ├── Anime/                  # Components specific to anime functionality.
+│       └── AnimeCard.vue       # Reusable card for anime details.
+│       └── AnimeList.vue       # Displays list of anime.
+│   ├── Search/                 # Components specific to the search functionality.
+│       └── SearchBar.vue       # Search bar component.
+│       └── SearchResults.vue   # Component for displaying search results.
+│   ├── Watch/                  # Components related to watching anime.
+│       └── WatchPlayer.vue     # Video player for anime episodes.
+│
+├── composables/                # Reusable logic (Vue 3 composition API).
+│   ├── useFetchAnime.js        # Fetch anime-related data from the API.
+│   ├── usePagination.js        # Handle pagination logic.
+│   ├── useSearchAnime.js       # Logic for search queries.
+│
+├── pages/                      # Views representing routes in the app.
+│   ├── HomePage.vue            # Landing page for popular/trending anime.
+│   ├── SearchPage.vue          # Search results page.
+│   ├── WatchPage.vue           # Page for watching anime episodes.
+│   ├── NotFoundPage.vue        # 404 page for unmatched routes.
+│
+├── router/                     # Vue Router configuration.
+│   └── index.js                # Define all app routes.
+│
+├── services/                   # API calls and services.
+│   ├── api.js                  # Axios instance configuration.
+│   ├── animeService.js         # API methods for fetching anime data.
+│
+├── store/                      # State management (using Pinia or Vuex).
+│   ├── index.js                # Main store configuration.
+│   ├── animeStore.js           # State related to anime data.
+│   ├── searchStore.js          # State for managing search queries/results.
+│
+├── App.vue                     # Root Vue component.
+├── main.js                     # App entry point.
+├── env/                        # Environment-specific configuration.
+│   ├── .env.development        # Development environment variables.
+│   ├── .env.production         # Production environment variables.
