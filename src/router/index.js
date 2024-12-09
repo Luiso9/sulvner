@@ -1,7 +1,5 @@
-// File: src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
 
-// Import pages
 import HomePage from '@/pages/HomePage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
 
@@ -14,12 +12,13 @@ const routes = [
   {
     path: '/search',
     name: 'Search',
-    component: () => import('@/pages/SearchPageWrapper.vue'), // Search results page
+    component: () => import('@/components/Search/SearchPageWrapper.vue'), // Search results page
+    props: (route) => ({ query: route.query.q})
   },
   {
     path: '/watch/:id',
     name: 'Watch',
-    component: () => import('@/pages/WatchPage.vue'),
+    component: () => import('@/pages/WatchPage.vue'), // Watch page
     props: true, // Pass route parameters as props
   },
   {
@@ -30,7 +29,7 @@ const routes = [
   },
 
   {
-    path: '/:catchAll(.*)', // Handle unmatched routes
+    path: '/:catchAll(.*)', // Handle unmatched routes return 404
     name: 'NotFound',
     component: NotFoundPage,
   },

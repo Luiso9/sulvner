@@ -1,7 +1,6 @@
 <template>
 	<div class="search-page-wrapper">
 		<!-- Search Input Section -->
-		<SearchBar />
 
 		<!-- Results Section -->
 		<SearchResults
@@ -13,15 +12,13 @@
 </template>
 
 <script>
-import SearchBar from "@/components/Search/SearchBar.vue";
-import SearchResults from "./SearchResults.vue";
+import SearchResults from "@/pages/SearchResults.vue";
 import { watch } from "vue";
 import { useSearchStore } from "@/store/searchStores";
 
 export default {
 	name: "SearchPageWrapper",
 	components: {
-		SearchBar,
 		SearchResults,
 	},
 	setup() {

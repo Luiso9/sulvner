@@ -18,7 +18,10 @@
 					{{ anime.dub }})
 				</p>
 				<p v-else>No episodes yet</p>
-				<button @click="viewAnimeDetails(anime.id)" class="anime-details-button">
+				<button
+					@click="viewAnimeDetails(anime.id)"
+					class="anime-details-button"
+				>
 					View Details
 				</button>
 				<button @click="watchAnime(anime.id)" class="anime-watch-button">
@@ -28,12 +31,19 @@
 		</div>
 
 		<div v-if="animeList.length > 0" class="pagination">
-			<button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="pagination-button">
+			<button
+				@click="changePage(currentPage - 1)"
+				:disabled="currentPage === 1"
+				class="pagination-button"
+			>
 				Previous
 			</button>
 			<span>Page {{ currentPage }} of {{ totalPages }}</span>
-			<button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages"
-				class="pagination-button">
+			<button
+				@click="changePage(currentPage + 1)"
+				:disabled="currentPage === totalPages"
+				class="pagination-button"
+			>
 				Next
 			</button>
 		</div>
@@ -41,7 +51,7 @@
 </template>
 
 <script>
-import { fetchRecentAnime } from "@/services/animeServices";
+import { fetchRecentAnime, fetchAnimeDetails } from "@/services/animeServices";
 
 export default {
 	name: "RecentRelease",
@@ -50,8 +60,6 @@ export default {
 			animeList: [],
 			currentPage: 1,
 			totalPages: 0,
-			showDetails: false,
-			selectedId: null,
 		};
 	},
 	async created() {
@@ -67,16 +75,42 @@ export default {
 				console.error("Error loading anime list:", error);
 			}
 		},
+
 		async changePage(page) {
 			if (page < 1 || page > this.totalPages) return;
 			this.currentPage = page;
 			await this.loadAnimeList();
 		},
+
 		viewAnimeDetails(id) {
 			this.$router.push({ name: "Info", params: { id } });
 		},
-		watchAnime(episodeId) {
-			this.$router.push({ name: "Watch", params: { id: episodeId } });
+
+		/**
+		 * It grab the episodeId from /info endpoint supposedly, because /recent-releases endpoint doesnt provide
+		 * the episodeId neither the url to stream
+		 * @param {any} animeId
+		 * @returns {any}
+		 */
+		async watchAnime(animeId) {
+			try {
+				// Fetch detailed anime info
+				const details = await fetchAnimeDetails(animeId);
+
+				const firstEpisode = details.episodes?.[0];
+				if (!firstEpisode) {
+					throw new Error("No episodes available for this anime.");
+				}
+
+				// Navigate to the watch page with the resolved episode ID
+				this.$router.push({
+					name: "Watch",
+					params: { id: firstEpisode.id },
+				});
+			} catch (error) {
+				console.error("Error fetching episode details:", error);
+				alert("Unable to fetch episode details. Please try again.");
+			}
 		},
 	},
 };

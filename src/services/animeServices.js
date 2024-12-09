@@ -81,16 +81,14 @@ export const searchAnime = async (query, page = 1) => {
  */
 export const fetchAnimeDetails = async (id) => {
   try {
-    // Construct the URL with the correct API path and query parameters
-    const response = await api.get('/zoro/info', {
-      params: { id },
-    });
-    return response.data; // Return the anime details
+    const response = await api.get(`/zoro/info`, { params: { id } });
+    return response.data;
   } catch (error) {
-    console.error('Error fetching anime details:', error);
-    throw error;
+    console.error("Error fetching anime details:", error);
+    throw new Error("Failed to fetch anime details.");
   }
 };
+
 
 /**
  * Fetch the streaming link for a specific episode and server.
