@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
 import './index.css';
+import 'bulma/css/bulma.css';
 
 const app = createApp(App);
 
