@@ -18,28 +18,18 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { fetchAnimeDetails } from '@/services/animeServices';
+<script>
+import { useAnimeStore } from '@/store/animeStore';
+import { computed } from 'vue';
 
-const route = useRoute();
-const animeDetails = ref(null);
-const error = ref(null);
+export default {
+  setup() {
+    const animeStore = useAnimeStore();
 
-const loadAnimeDetails = async () => {
-  try {
-    const id = route.params.id;
-    if (!id) throw new Error('Anime ID is undefined');
-    animeDetails.value = await fetchAnimeDetails(id);
-  } catch (err) {
-    error.value = err;
-  }
+    const anime = computed(() => animeStore.animeDetails);
+    const loading = computed(() => animeStore.loading);
+
+    return { anime, loading };
+  },
 };
-
-onMounted(loadAnimeDetails);
 </script>
-
-<style scoped>
-/* Add any component-specific styles here */
-</style>

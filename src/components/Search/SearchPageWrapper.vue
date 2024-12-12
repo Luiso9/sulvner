@@ -1,6 +1,13 @@
 <template>
 	<div class="search-page-wrapper">
 		<!-- Search Input Section -->
+		<div class="search-input">
+			<input
+				v-model="searchStore.query"
+				placeholder="Search for an anime..."
+				class="search-bar"
+			/>
+		</div>
 
 		<!-- Results Section -->
 		<SearchResults
@@ -28,7 +35,7 @@ export default {
 			() => searchStore.query,
 			async (newQuery) => {
 				if (newQuery.trim()) {
-					await searchStore.fetchResults(); // Automatically fetch results on query change
+					await searchStore.fetchResults();
 				}
 			}
 		);
@@ -41,3 +48,19 @@ export default {
 	},
 };
 </script>
+
+<style>
+.search-page-wrapper {
+	padding: 1rem;
+}
+.search-input {
+	margin-bottom: 1rem;
+}
+.search-bar {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 1rem;
+}
+</style>

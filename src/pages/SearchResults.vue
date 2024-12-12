@@ -15,12 +15,9 @@
 		</div>
 
 		<!-- Pagination -->
+		<!-- TODO : NEED FIXES -->
 		<div v-if="results.length > 0" class="pagination">
-			<button
-				@click="changePage(currentPage - 1)"
-				:disabled="currentPage === 1"
-				class="pagination-button"
-			>
+			<button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="pagination-button">
 				Previous
 			</button>
 			<span>Page {{ currentPage }}</span>
@@ -49,18 +46,17 @@ export default {
 		},
 	},
 	setup() {
-		const searchStore = useSearchStore(); // Access Pinia store
+		const searchStore = useSearchStore();
 		const router = useRouter();
 
-		// Navigation to anime details page
 		const viewDetails = (id) => {
 			router.push({ name: "Info", params: { id } });
 		};
 
 		// Change pagination page
 		const changePage = (newPage) => {
-			searchStore.setCurrentPage(newPage); 
-			searchStore.fetchResults(); 
+			searchStore.setCurrentPage(newPage);
+			searchStore.fetchResults();
 		};
 
 		return { viewDetails, changePage };
@@ -74,15 +70,32 @@ export default {
 	flex-wrap: wrap;
 	gap: 1rem;
 }
+
 .result-card {
 	width: 200px;
 	border: 1px solid #ccc;
 	padding: 0.5rem;
 	text-align: center;
 }
+
 .details-button {
 	margin-top: 0.5rem;
 	padding: 0.3rem 0.6rem;
+	cursor: pointer;
+}
+
+.pagination {
+	margin-top: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+}
+
+.home-link {
+	margin-left: 1rem;
+	text-decoration: underline;
+	color: blue;
 	cursor: pointer;
 }
 </style>

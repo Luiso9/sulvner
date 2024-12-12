@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
+
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
@@ -10,5 +11,11 @@ module.exports = defineConfig({
         '__VUE_PROD_DEVTOOLS__': JSON.stringify(false),
       })
     ]
+  },
+
+  pluginOptions: {
+    vuetify: {
+			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
+		}
   }
 })
