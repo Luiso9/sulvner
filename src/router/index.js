@@ -2,10 +2,16 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAnimeStore } from '@/store/animeStore'; 
 import HomePage from '@/pages/HomePage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
+import LandingPage from '@/pages/LandingPage.vue';
 
 const routes = [
   {
     path: '/',
+    name: 'Landing',
+    component: LandingPage,
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: HomePage,
   },

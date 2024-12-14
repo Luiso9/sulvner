@@ -1,6 +1,5 @@
 <template>
 	<RecentRelease />
-
 	<TopAnime />
 </template>
 

@@ -9,7 +9,7 @@
 							d="M4 6h16M4 12h16m-7 6h7"></path>
 					</svg>
 				</button>
-				<router-link to="/" class="text-xl font-semibold text-gray-800 ml-4">Sulvner</router-link>
+				<router-link to="/home" class="text-xl font-semibold text-gray-800 ml-4">Sulvner</router-link>
 			</div>
 			<div class="hidden lg:flex items-center space-x-4">
 				<router-link v-for="item in menuItems" :key="item.title" :to="item.path"
@@ -58,7 +58,7 @@
 					</button>
 				</div>
 				<nav class="p-4">
-					<router-link v-for="link in links" :key="link.text" :to="link.to"
+					<router-link v-for="link in links" :key="link.text" :to="link.path"
 						class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded-lg" @click="toggleSidebar">
 						<span class="flex items-center">
 							<span class="w-5 h-5 mr-1 material-symbols-outlined">
@@ -86,17 +86,21 @@ export default {
 			links: [
 				{
 					text: "Home",
-					to: "/",
-					iconName: "home"
+					path: "/home",
+					iconName: "home",
 				},
 				{
-					text: "About",
-					to: "/about",
+					title: "About",
+					path: "/about",
 					iconName: "public",
 				},
 			],
 			menuItems: [
-				{ title: "Home", path: "/", iconName: "home" },
+				{
+					title: "Home",
+					path: "/home",
+					iconName: "home"
+				},
 				{
 					title: "About",
 					path: "/about",

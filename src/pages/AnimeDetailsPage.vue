@@ -7,7 +7,7 @@
       <p>Episodes: {{ anime.totalEpisodes || "No episodes available" }}</p>
       <img :src="anime.image" :alt="anime.title" />
       <p><a :href="anime.url" target="_blank">Visit Official Page</a></p>
-      <RouterLink to="/">Go to Home</RouterLink>
+      <router-link to='/'>Go Home</router-link>
     </div>
     <div v-else-if="error">
       <p>Error: {{ error.message }}</p>
